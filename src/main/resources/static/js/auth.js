@@ -1,4 +1,4 @@
-const BASE_URL = '/api';
+const BASE_URL = '/springboot-jwt/api';
 const API_URL = `${BASE_URL}/auth`;
 
 function switchTab(tab) {
