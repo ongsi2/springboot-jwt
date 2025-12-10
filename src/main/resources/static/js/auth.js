@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:8081/api';
+const BASE_URL = '/api';
 const API_URL = `${BASE_URL}/auth`;
 
 function switchTab(tab) {
