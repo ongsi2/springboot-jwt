@@ -241,10 +241,21 @@ redisTemplate.opsForValue().set("blacklist:" + token, "true", remainingTime, Tim
 ## 📸 스크린샷
 
 ### 공개 아키텍처 문서
+로그인 없이 시스템 설계를 확인할 수 있는 공개 문서 화면입니다.
+
+<!-- 스크린샷 추가 방법:
+1. 애플리케이션 실행 후 스크린샷 캡처
+2. docs/images/ 폴더에 저장
+3. 아래 주석을 해제하고 경로 수정
 ![시스템 아키텍처](docs/images/architecture.png)
+-->
 
 ### 관리자 대시보드
+사용자 통계, 목록 조회, 강제 로그아웃 기능을 제공하는 관리자 화면입니다.
+
+<!-- 
 ![관리자 대시보드](docs/images/dashboard.png)
+-->
 
 ---
 
