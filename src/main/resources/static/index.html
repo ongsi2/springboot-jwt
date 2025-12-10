@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Auth Project</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Auth Container -->
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2>Welcome</h2>
+            <p>Spring Boot JWT 인증 시스템</p>
+        </div>
+
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('login')">로그인</div>
+            <div class="tab" onclick="switchTab('register')">회원가입</div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="loginUsername" placeholder="아이디를 입력하세요" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="비밀번호" required>
+            </div>
+            <button type="submit" class="btn-primary">로그인</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="hidden">
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="regUsername" placeholder="영문/숫자 (한글 불가)" required>
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" id="regEmail" placeholder="example@email.com" required>
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="regPassword" placeholder="비밀번호 설정" required>
+            </div>
+            <button type="submit" class="btn-primary">회원가입</button>
+        </form>
+
+        <div id="message"></div>
+
+        <div class="mt-4 text-center border-top pt-3">
+            <p class="text-muted small">포트폴리오 검토를 위해 오셨나요?</p>
+            <button class="btn btn-outline-info w-100" onclick="togglePublicDocs(true)">
+                <i class="bi bi-diagram-3-fill me-2"></i>시스템 아키텍처 및 보안 설계 보기
+            </button>
+        </div>
+    </div>
+
+    <!-- Public Docs Container (Accessible without Login) -->
+    <div class="public-docs-container container mt-5" style="display: none; max-width: 900px;">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="section-title mb-0">시스템 소개</h2>
+            <button class="btn btn-secondary" onclick="togglePublicDocs(false)">
+                <i class="bi bi-arrow-left me-2"></i>로그인 화면으로
+            </button>
+        </div>
+
+        <!-- Reusing Architecture Content -->
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <i class="bi bi-shield-check me-2"></i>인증 프로세스 (Authentication Flow)
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-light">
+                            <i class="bi bi-person-badge display-6 text-primary mb-2"></i>
+                            <h6>1. Client</h6>
+                            <small class="text-muted">로그인 요청</small>
+                        </div>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="p-3 border rounded bg-light">
+                            <i class="bi bi-server display-6 text-success mb-2"></i>
+                            <h6>2. Server</h6>
+                            <small class="text-muted">검증 & 토큰 발급</small>
+                        </div>
+                    </div>
+                    <div class="col-md-1 d-flex align-items-center justify-content-center">
+                        <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="p-3 border rounded bg-light">
+                            <i class="bi bi-key display-6 text-danger mb-2"></i>
+                            <h6>3. Tokens</h6>
+                            <div class="text-start mt-2" style="font-size: 0.85rem;">
+                                <span class="badge bg-primary">Access Token</span> (30m)<br>
+                                <span class="badge bg-secondary mt-1">Refresh Token</span> (7d) -> Redis
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-danger">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger"><i class="bi bi-slash-circle me-2"></i>Redis Blacklist</h5>
+                        <p class="card-text small">
+                            로그아웃 시 <b>남은 유효시간 동안</b> 해당 토큰을 Redis 블랙리스트에 등록하여, 토큰 탈취 후 재사용 공격을 원천 차단합니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 shadow-sm border-info">
+                    <div class="card-body">
+                        <h5 class="card-title text-info"><i class="bi bi-arrow-repeat me-2"></i>Dual Token Policy</h5>
+                        <p class="card-text small">
+                            Access Token(Stateless)과 Refresh Token(Stateful)을 분리하여, <b>보안성</b>과 <b>사용자 편의성</b>(자동 연장)을
+                            동시에 확보했습니다.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm mb-5">
+            <div class="card-header">
+                <i class="bi bi-code-slash me-2"></i>Tech Stack
+            </div>
+            <div class="card-body">
+                <span class="badge bg-success p-2 me-1">Spring Boot 3.2</span>
+                <span class="badge bg-warning text-dark p-2 me-1">Spring Security 6</span>
+                <span class="badge bg-primary p-2 me-1">JJWT 0.12</span>
+                <span class="badge bg-danger p-2 me-1">Redis</span>
+                <span class="badge bg-info text-dark p-2 me-1">PostgreSQL</span>
+                <span class="badge bg-secondary p-2 me-1">Docker Compose</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <div class="dashboard-layout">
+            <!-- 1. Sidebar -->
+            <div class="sidebar">
+                <div class="sidebar-header">JWT Auth System</div>
+                <div class="nav-menu">
+                    <div class="nav-item active" onclick="showSection('profile')" id="nav-profile">
+                        <i class="bi bi-person-circle me-2"></i>내 정보
+                    </div>
+                    <div class="nav-item" onclick="showSection('admin')" id="nav-admin" style="display: none;">
+                        <i class="bi bi-gear-fill me-2"></i>사용자 관리
+                    </div>
+                </div>
+                <!-- Logout Button at bottom of sidebar -->
+                <div class="nav-item logout" onclick="logout()">로그아웃</div>
+            </div>
+
+            <!-- 2. Main Content -->
+            <div class="main-content">
+
+                <!-- Section: User Profile -->
+                <div id="section-profile">
+                    <h2 class="section-title">내 정보</h2>
+                    <div class="card p-4 shadow-sm">
+                        <div class="profile-item">
+                            <span class="profile-label">USER ID</span>
+                            <span class="profile-value" id="p-id">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <span class="profile-label">USERNAME</span>
+                            <span class="profile-value" id="p-username">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <span class="profile-label">ROLE</span>
+                            <span class="profile-value" id="p-role">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: System Architecture -->
+                <div id="section-architecture" style="display: none;">
+                    <h2 class="section-title">시스템 소개</h2>
+                    <p class="text-muted">본 프로젝트의 핵심 아키텍처 및 보안 설계입니다.</p>
+
+                    <!-- 1. Auth Flow -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-dark text-white">
+                            <i class="bi bi-shield-check me-2"></i>인증 프로세스 (Authentication Flow)
+                        </div>
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <div class="p-3 border rounded bg-light">
+                                        <i class="bi bi-person-badge display-6 text-primary mb-2"></i>
+                                        <h6>1. Client</h6>
+                                        <small class="text-muted">로그인 요청</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="p-3 border rounded bg-light">
+                                        <i class="bi bi-server display-6 text-success mb-2"></i>
+                                        <h6>2. Server</h6>
+                                        <small class="text-muted">검증 & 토큰 발급</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-1 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-arrow-right fs-3 text-muted"></i>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="p-3 border rounded bg-light">
+                                        <i class="bi bi-key display-6 text-danger mb-2"></i>
+                                        <h6>3. Tokens</h6>
+                                        <div class="text-start mt-2" style="font-size: 0.85rem;">
+                                            <span class="badge bg-primary">Access Token</span> (30m)<br>
+                                            <span class="badge bg-secondary mt-1">Refresh Token</span> (7d) -> Redis
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Security Features -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm border-danger">
+                                <div class="card-body">
+                                    <h5 class="card-title text-danger"><i class="bi bi-slash-circle me-2"></i>Redis
+                                        Blacklist</h5>
+                                    <p class="card-text small">
+                                        로그아웃 시 <b>남은 유효시간 동안</b> 해당 토큰을 Redis 블랙리스트에 등록하여, 토큰 탈취 후 재사용 공격을 원천 차단합니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card h-100 shadow-sm border-info">
+                                <div class="card-body">
+                                    <h5 class="card-title text-info"><i class="bi bi-arrow-repeat me-2"></i>Dual Token
+                                        Policy</h5>
+                                    <p class="card-text small">
+                                        Access Token(Stateless)과 Refresh Token(Stateful)을 분리하여, <b>보안성</b>과 <b>사용자
+                                            편의성</b>(자동 연장)을 동시에 확보했습니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Tech Stack -->
+                    <div class="card shadow-sm">
+                        <div class="card-header">
+                            <i class="bi bi-code-slash me-2"></i>Tech Stack
+                        </div>
+                        <div class="card-body">
+                            <span class="badge bg-success p-2 me-1">Spring Boot 3.2</span>
+                            <span class="badge bg-warning text-dark p-2 me-1">Spring Security 6</span>
+                            <span class="badge bg-primary p-2 me-1">JJWT 0.12</span>
+                            <span class="badge bg-danger p-2 me-1">Redis</span>
+                            <span class="badge bg-info text-dark p-2 me-1">PostgreSQL</span>
+                            <span class="badge bg-secondary p-2 me-1">Docker Compose</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Admin Management -->
+                <div id="section-admin" style="display: none;">
+                    <h2 class="section-title">사용자 관리</h2>
+                    <p class="text-muted">전체 사용자 현황을 조회하고 관리합니다.</p>
+
+                    <!-- Stats Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card text-white bg-primary mb-3">
+                                <div class="card-header">Total Users</div>
+                                <div class="card-body">
+                                    <h3 class="card-title" id="stat-total-users">-</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card text-white bg-success mb-3">
+                                <div class="card-header">Admin Users</div>
+                                <div class="card-body">
+                                    <h3 class="card-title" id="stat-admin-users">-</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Username</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="user-table-body">
+                                        <!-- User list populated by JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Link JS -->
+        <script src="js/dashboard.js"></script>
+        <script src="js/auth.js"></script>
+</body>
+
+</html>

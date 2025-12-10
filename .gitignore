@@ -1,0 +1,31 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+nul
+
+# Application
+*.log
+*.pid
+
+# Sensitive files
+*.json
+!package.json
+!tsconfig.json
+
+# Spring Boot
+application-*.yml
+!application.yml

@@ -1,0 +1,266 @@
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+    background-color: #f4f7f6;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Auth Container */
+.auth-container {
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 380px;
+    transition: all 0.3s ease;
+}
+
+.auth-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.auth-header h2 {
+    color: #333;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+.auth-header p {
+    color: #888;
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid #eee;
+}
+
+.tab {
+    flex: 1;
+    text-align: center;
+    padding: 1rem;
+    cursor: pointer;
+    color: #aaa;
+    font-weight: 600;
+    transition: color 0.3s, border-bottom 0.3s;
+}
+
+.tab.active {
+    color: #007bff;
+    border-bottom: 2px solid #007bff;
+    margin-bottom: -2px;
+}
+
+.tab:hover:not(.active) {
+    color: #666;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.2rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #555;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+button.btn-primary {
+    width: 100%;
+    padding: 0.9rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background-color 0.3s, transform 0.1s;
+    margin-top: 1rem;
+}
+
+button.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+button.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* Messages */
+#message {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.9rem;
+    min-height: 1.2em;
+}
+
+.error {
+    color: #dc3545;
+}
+
+.success {
+    color: #28a745;
+}
+
+/* Dashboard Styles - Sidebar Layout */
+.dashboard-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 90%;
+    max-width: 1200px;
+    height: 80vh;
+    display: none;
+    /* Hidden by default */
+    overflow: hidden;
+    /* For rounded corners */
+}
+
+/* Flex Container for Sidebar + Content */
+.dashboard-layout {
+    display: flex;
+    height: 100%;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #343a40;
+    /* Dark Sidebar */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+}
+
+.sidebar-header {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 2rem;
+    color: #fff;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 1rem;
+}
+
+.nav-menu {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.nav-item {
+    padding: 0.8rem 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+.nav-item:hover,
+.nav-item.active {
+    background-color: #0d6efd;
+    /* Bootstrap Primary */
+    color: white;
+}
+
+.nav-item.logout {
+    margin-top: auto;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    text-align: center;
+}
+
+.nav-item.logout:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Main Content Area */
+.main-content {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    overflow-y: auto;
+}
+
+.section-title {
+    margin-bottom: 1.5rem;
+    color: #333;
+    font-weight: bold;
+    border-bottom: 2px solid #0d6efd;
+    display: inline-block;
+    padding-bottom: 0.5rem;
+}
+
+
+.profile-card {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #eee;
+}
+
+.profile-item {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.profile-label {
+    color: #888;
+}
+
+.profile-value {
+    font-weight: 600;
+    color: #333;
+}
+
+.btn-logout {
+    padding: 0.5rem 1rem;
+    background: #fff;
+    border: 1px solid #dc3545;
+    color: #dc3545;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-logout:hover {
+    background: #dc3545;
+    color: white;
+}
+
+/* Utils */
+.hidden {
+    display: none !important;
+}

@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Spring Boot Application
+  app:
+    container_name: jwt-app
+    build: .
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/jwt_db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=skffkfl28
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - jwt-network
+
+  # PostgreSQL Database
+  postgres:
+    container_name: jwt-db
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=jwt_db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=skffkfl28
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - jwt-network
+
+  # Redis Cache
+  redis:
+    container_name: jwt-redis
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    networks:
+      - jwt-network
+
+networks:
+  jwt-network:
+    driver: bridge
+
+
+volumes:
+  postgres_data:
+  redis_data:
